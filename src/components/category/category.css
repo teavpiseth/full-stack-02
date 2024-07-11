@@ -1,0 +1,11 @@
+.card-category {
+  border: 1px solid rgb(230, 235, 239);
+  box-shadow: rgba(147, 167, 195, 0.72) -1px 11px 9px -10px;
+  border-radius: 10px;
+  width: 150px;
+}
+.category-img {
+  width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+}
