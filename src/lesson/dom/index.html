@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DOM Creation Example</title>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="my-element"></div>
+
+    <script type="text/babel">
+      const myElement = document.getElementById("my-element");
+
+      // Set the innerHTML
+      myElement.innerHTML = (
+        <div>
+          <h1>Hello, World!</h1>
+          <p>This is some content.</p>
+        </div>
+      );
+    </script>
+  </body>
+</html>
