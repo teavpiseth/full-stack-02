@@ -99,19 +99,30 @@ const sculptureList = [
   },
 ];
 
+function rerender() {
+  let index = 0;
+
+  console.log(index, "index in function re-render");
+  index = index + 1;
+  console.log(index, "index in function re-render after +1");
+
+  console.log("end");
+}
+
 export default function StateComponentMemory() {
-  // setTimeout(() => {
-  //   console.log("settimeout");
-  // },1000)
-  // let index = 0;
+  let index = 0;
+
   const [page, setPage] = useState(0);
   function handleClick() {
-    setPage(page + 1);
+    index = index + 1;
+    console.log(index, "index inside");
+    // rerender();
+    setPage(page + 1 >= sculptureList.length ? 0 : page + 1);
   }
 
   let sculpture = sculptureList[page];
 
-  console.log("--rerender", page);
+  // console.log(index, "index");
   return (
     <>
       <button onClick={handleClick}>Next</button>
