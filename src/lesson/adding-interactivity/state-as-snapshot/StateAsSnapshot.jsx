@@ -8,13 +8,12 @@ export default function StateAsSnapshot() {
       <h1>{number}</h1>
       <button
         onClick={() => {
-          setNumber(number + 1); //1
-          setTimeout(() => {
-            alert(number);
-          }, 10000);
+          setNumber(number + 1);
+          setNumber((v) => v + 1);
+          setNumber((v) => v + 1);
         }}
       >
-        +1
+        +3
       </button>
     </>
   );

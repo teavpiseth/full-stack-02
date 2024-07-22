@@ -3,13 +3,15 @@ import Category from "./components/category/Category";
 import ModalComponent from "./lesson/adding-interactivity/ant-design/Modal";
 import StateAsSnapshot from "./lesson/adding-interactivity/state-as-snapshot/StateAsSnapshot";
 import StateComponentMemory from "./lesson/adding-interactivity/state-component-memory/StateComponentMemory";
+import UpdateObjectState from "./lesson/adding-interactivity/update-object/UpdateObjectState";
 
 function App() {
   return (
     <>
       {/* <StateComponentMemory /> */}
       {/* <StateAsSnapshot /> */}
-      <ModalComponent />
+      {/* <ModalComponent /> */}
+      <UpdateObjectState />
     </>
   );
 }
