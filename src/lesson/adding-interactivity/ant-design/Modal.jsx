@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Modal } from "antd";
 const StateComponentMemory = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -23,7 +23,7 @@ const StateComponentMemory = () => {
         onCancel={handleCancel}
         closeIcon={<>Close</>}
         width={1000}
-        afterClose={() => alert("Modal just closed!")}
+        // afterClose={() => alert("Modal just closed!")}
       >
         <p>Some contents...</p>
         <p>Some contents...</p>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Modal } from "antd";
+import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 
 const initValue = {
@@ -18,7 +19,6 @@ export default function UpdateObjectState() {
   const [person, updatePerson] = useImmer(initValue);
 
   const [listStudent, setListStudent] = useState([]);
-  console.log(listStudent, "listStudent");
 
   const [isEdit, setIsEdit] = useState(null);
   const onDeleteStudent = (index) => {
@@ -48,8 +48,39 @@ export default function UpdateObjectState() {
       updatePerson(initValue);
     }
   }
+  // const openModal = true;
+  const [openModal, setOpenModal] = useState(false);
+
+  // handle component mount
+  // useEffect(() => {
+
+  // }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setOpenModal(true);
+    }, 5000);
+    console.log("life cycle component mount");
+  }, []);
+
+  useEffect(() => {
+    console.log("life cycle component update");
+  }, [openModal, person]);
   return (
     <div>
+      <Modal
+        title="Advertisement"
+        open={openModal}
+        footer={null}
+        onCancel={() => setOpenModal(false)}
+        closeIcon={<>Close</>}
+        width={1000}
+        // afterClose={() => alert("Modal just closed!")}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
       <h2>Add new student</h2>
       <label>Name:</label>
       <input
