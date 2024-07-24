@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Greeting from "./Greeting";
 import { status } from "./data";
 
@@ -21,13 +21,13 @@ export default function MemoComponent() {
 
   todoName?.filter((item) => item.status !== "Done");
 
-  function updateTodo(index, newStatus) {
-    // console.log("updateTodo", index, newStatus);
+  function _updateTodo(index, newStatus) {
     let newTodo = [...todoNameFilter];
     newTodo[index].status = newStatus;
-    console.log("new todo", newTodo);
     setTodoName(todoNameFilter);
   }
+
+  const updateTodo = useCallback(_updateTodo, [todoNameFilter]);
 
   return (
     <div style={{ background: mode, padding: "10px" }}>

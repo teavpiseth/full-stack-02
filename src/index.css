@@ -66,3 +66,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.table-done{
+  background: #97b0db;
+}
+.table-padding{
+  background: #e5d4b6;
+}
+.table-progress{
+  background: #bae1bb;
+}
