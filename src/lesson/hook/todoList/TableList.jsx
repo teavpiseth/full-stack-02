@@ -1,8 +1,17 @@
 /* eslint-disable react/prop-types */
 
+import { CloseCircleOutlined } from "@ant-design/icons";
 import { Select, Table } from "antd";
+import React from "react";
 
-const TableList = ({ todoList, onChangeStatus, status }) => {
+const TableList = ({
+  todoList,
+  onChangeStatus,
+  status,
+  filter,
+  deleteTodo,
+}) => {
+  console.log("render TableList");
   const columns = [
     {
       title: "Name",
@@ -17,9 +26,22 @@ const TableList = ({ todoList, onChangeStatus, status }) => {
         return (
           <Select
             value={record.status}
-            onChange={(value) => onChangeStatus(index, value)}
+            onChange={(value) => onChangeStatus(record.key, value)}
             options={status?.map((val) => ({ value: val, label: val }))}
             style={{ width: 120 }}
+          />
+        );
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (text, record) => {
+        return (
+          <CloseCircleOutlined
+            onClick={() => deleteTodo(record.key)}
+            style={{ color: "red", cursor: "pointer" }}
           />
         );
       },
@@ -35,13 +57,25 @@ const TableList = ({ todoList, onChangeStatus, status }) => {
       return "table-progress";
     }
   };
+
+  const dataSource = todoList?.map((item, index) => {
+    return { ...item, key: index };
+  });
+
+  const dataFilter = dataSource?.filter((item) => {
+    if (!filter) {
+      return true;
+    }
+    return item.status === filter;
+  });
+
   return (
     <Table
       rowClassName={(record, index) => changeColor(record, index)}
       pagination={false}
       columns={columns}
-      dataSource={todoList?.map((item, i) => ({ ...item, key: i }))}
+      dataSource={dataFilter}
     />
   );
 };
-export default TableList;
+export default React.memo(TableList);
