@@ -43,7 +43,7 @@ const CategoryList = React.memo(function CategoryList() {
               xl={6}
               onClick={() => {}}
             >
-              <Link to={`/product-category?categoryId=${item.Id}`}>
+              <Link to={`/web/product-category?categoryId=${item.Id}`}>
                 <div
                   className="animate__animated animate__fadeInLeft"
                   style={{

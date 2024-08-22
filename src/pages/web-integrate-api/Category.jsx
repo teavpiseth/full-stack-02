@@ -86,9 +86,7 @@ const CategoryPage = React.memo(function CategoryPage() {
   }, []);
   return (
     <div style={{ maxWidth: 1100, margin: "auto", padding: 20 }}>
-      <h2 onClick={dataContext.alertAtAppComponent}>
-        Test function from context
-      </h2>
+ 
       <Row>
         <Col xs={24} sm={24} md={6} lg={6} xl={6}>
           <Menu
@@ -119,7 +117,7 @@ const CategoryPage = React.memo(function CategoryPage() {
                   span={8}
                   style={{ textAlign: "center", marginBottom: 15 }}
                 >
-                  <Link to="/product-detail" state={obj}>
+                  <Link to="/web/product-detail" state={obj}>
                     <Card
                       hoverable
                       style={{

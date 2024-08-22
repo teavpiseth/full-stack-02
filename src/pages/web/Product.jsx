@@ -9,7 +9,7 @@ const Product = React.memo(function Product() {
     <div style={{ maxWidth: 1100, margin: "auto", padding: 20 }}>
       <h2 style={{ fontWeight: 400, margin: "0px 0" }}>Product</h2>
       <Row>
-        <Link to={"/product-detail"}>
+        <Link to={"/web/product-detail"}>
           <Col span={6} style={{ textAlign: "center", marginBottom: 15 }}>
             <Card
               hoverable
@@ -82,7 +82,7 @@ const Product = React.memo(function Product() {
             </Card>
           </Col>
         </Link>
-        <Link to={"/product-detail"}>
+        <Link to={"/web/product-detail"}>
           <Col span={6} style={{ textAlign: "center", marginBottom: 15 }}>
             <Card
               hoverable

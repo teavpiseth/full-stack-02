@@ -34,7 +34,7 @@ function HeaderWebMemo() {
       <div style={{ padding: 10 }}>
         <Row style={{ alignItems: "center" }}>
           <Col xs={24} sm={12} md={6} lg={6}>
-            <Link to={"/"}>
+            <Link to={"/web"}>
               <img
                 style={{
                   margin: "auto",

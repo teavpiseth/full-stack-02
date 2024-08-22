@@ -26,7 +26,7 @@ const Product = React.memo(function Product() {
               span={6}
               style={{ textAlign: "center", marginBottom: 15 }}
             >
-              <Link to="/product-detail" state={obj}>
+              <Link to="/web/product-detail" state={obj}>
                 <Card
                   hoverable
                   style={{
