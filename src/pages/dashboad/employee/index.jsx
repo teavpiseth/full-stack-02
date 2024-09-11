@@ -3,6 +3,7 @@ import { Button, Image, Switch, Table, Tag } from "antd";
 import { getImageView, Status } from "../../../utils/constant";
 import { useEmployee } from "./hook/useEmployee";
 import AddEmployee from "./components/AddEmployee";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const Employee = () => {
   const {
@@ -12,6 +13,10 @@ const Employee = () => {
     dataList,
     isOpenModal,
     setIsOpenModal,
+    fetchData,
+    handleDelete,
+    edit,
+    setEdit,
   } = useEmployee();
 
   function imageCustom(value) {
@@ -35,13 +40,36 @@ const Employee = () => {
         </Button>
       </div>
       {isOpenModal && (
-        <AddEmployee isOpen={isOpenModal} setIsOpen={setIsOpenModal} />
+        <AddEmployee
+          isOpen={isOpenModal}
+          setIsOpen={(value) => {
+            setIsOpenModal(value);
+            setEdit({ isEdit: false, data: {} });
+          }}
+          fetchData={fetchData}
+          edit={edit}
+        />
       )}
 
       <Table
         columns={columns({
           imageCustom: imageCustom,
           statusCustom: statusCustom,
+          action: (record) => (
+            <div>
+              <DeleteOutlined
+                onClick={() => handleDelete(record)}
+                style={{ color: "red" }}
+              />
+              <EditOutlined
+                style={{ color: "blue", marginLeft: "10px" }}
+                onClick={() => {
+                  setEdit({ isEdit: true, data: record });
+                  setIsOpenModal(true);
+                }}
+              />
+            </div>
+          ),
         })}
         dataSource={dataList}
         scroll={{

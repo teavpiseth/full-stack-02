@@ -1,15 +1,20 @@
-import { Image, Tag } from "antd";
+import { Image, Modal, notification, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { Gender, getImageView, Status } from "../../../../utils/constant";
 import moment from "moment";
 import BaseService from "../../../../services/BaseService";
+import { DeleteOutlined } from "@ant-design/icons";
 
 export function useEmployee() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [fixedTop, setFixedTop] = useState(false);
   const [dataList, setDataList] = useState([]);
+  const [edit, setEdit] = useState({
+    isEdit: false,
+    data: {},
+  });
 
-  function columns({ imageCustom, statusCustom }) {
+  function columns({ imageCustom, statusCustom, action }) {
     return [
       {
         title: "Name",
@@ -81,7 +86,7 @@ export function useEmployee() {
         key: "operation",
         fixed: "right",
         width: 100,
-        render: () => "action",
+        render: action,
       },
     ];
   }
@@ -92,6 +97,30 @@ export function useEmployee() {
     );
     setDataList(res.data);
   }
+
+  const confirmDelete = async (id) => {
+    const res = await BaseService.delete(
+      `http://localhost:8081/api/employee/delete`,
+      { id }
+    );
+    if (res) {
+      notification.success({
+        message: "Delete Success",
+        placement: "topRight",
+      });
+      fetchData();
+    }
+  };
+
+  const handleDelete = (record) => {
+    Modal.confirm({
+      title: "Delete Employee",
+      content: "Are you sure you want to delete!",
+      onOk: () => confirmDelete(record.Id),
+      onCancel: () => {},
+    });
+    console.log(record);
+  };
 
   useEffect(() => {
     fetchData();
@@ -104,5 +133,9 @@ export function useEmployee() {
     columns,
     isOpenModal,
     setIsOpenModal,
+    fetchData,
+    handleDelete,
+    edit,
+    setEdit,
   };
 }

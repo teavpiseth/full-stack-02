@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from "antd";
-import moment from "moment";
+import { useEffect, useState } from "react";
+import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import BaseService from "../../../../services/BaseService";
-const AddEmployee = ({ isOpen, setIsOpen }) => {
+const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(isOpen);
+  const [form] = Form.useForm();
 
   const handleOk = () => {
     setLoading(true);
@@ -18,12 +18,29 @@ const AddEmployee = ({ isOpen, setIsOpen }) => {
     setIsOpen(false);
   };
 
-  const onFinish = (values) => {
-    BaseService.post("http://localhost:8081/api/employee/create", {
-      ...values,
-      dob: values.dob.format("YYYY-MM-DD"),
-    });
+  const onFinish = async (values) => {
+    const result = await BaseService.post(
+      "http://localhost:8081/api/employee/create",
+      {
+        ...values,
+        image: values.firstName,
+        dob: values.dob.format("YYYY-MM-DD"),
+      }
+    );
+    if (result) {
+      setIsOpen(false);
+      fetchData();
+    }
   };
+
+  useEffect(() => {
+    // setOpen(isOpen);
+    form.setFieldValue("gender", edit.data.Gender);
+    form.setFieldValue("tel", edit.data.Tel);
+    form.setFieldValue("address", edit.data.Address);
+    form.setFieldValue("status", edit.data.Status);
+    form.setFieldValue("email", edit.data.Email);
+  }, [edit, form]);
   return (
     <>
       <Modal
@@ -34,24 +51,35 @@ const AddEmployee = ({ isOpen, setIsOpen }) => {
         footer={null}
       >
         <Form
+          form={form}
           style={{ width: "100%" }}
           onFinish={onFinish}
           name="layout-multiple-horizontal"
         >
           {/* Name Image Gender Dob Tel Email Address Status */}
-
           <Form.Item
             style={{ display: "block" }}
-            label="Name"
-            name="name"
+            label="First Name"
+            name="firstName"
             rules={[
               {
                 required: true,
-                message: "Please input your name!",
               },
             ]}
           >
-            <Input placeholder="input name" name="name" />
+            <Input />
+          </Form.Item>
+          <Form.Item
+            style={{ display: "block" }}
+            label="Last Name"
+            name="lastName"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
           </Form.Item>
 
           <Form.Item
