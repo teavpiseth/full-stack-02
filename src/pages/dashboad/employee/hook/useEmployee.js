@@ -2,9 +2,12 @@ import { Image, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { Gender, getImageView, Status } from "../../../../utils/constant";
 import moment from "moment";
+import BaseService from "../../../../services/BaseService";
 
 export function useEmployee() {
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [fixedTop, setFixedTop] = useState(false);
+  const [dataList, setDataList] = useState([]);
 
   function columns({ imageCustom, statusCustom }) {
     return [
@@ -30,14 +33,13 @@ export function useEmployee() {
         dataIndex: "Gender",
         key: "Gender",
         width: 150,
-        render: (record, text, index) => Gender[text.Gender],
       },
-      {
-        title: "Role",
-        dataIndex: "RoleName",
-        key: "RoleName",
-        width: 150,
-      },
+      // {
+      //   title: "Role",
+      //   dataIndex: "RoleName",
+      //   key: "RoleName",
+      //   width: 150,
+      // },
       {
         title: "Dob",
         dataIndex: "Dob",
@@ -84,12 +86,23 @@ export function useEmployee() {
     ];
   }
 
+  async function fetchData() {
+    const res = await BaseService.get(
+      "http://localhost:8081/api/employee/get-list"
+    );
+    setDataList(res.data);
+  }
+
   useEffect(() => {
-    console.log("use effect");
+    fetchData();
   }, []);
+
   return {
+    dataList,
     fixedTop,
     setFixedTop,
     columns,
+    isOpenModal,
+    setIsOpenModal,
   };
 }

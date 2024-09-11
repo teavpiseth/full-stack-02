@@ -1,5 +1,6 @@
 import { message } from "antd";
 import axios from "axios";
+import LocalStorage from "../utils/LocalStorage";
 
 class BaseService {
   async sendRequest(method, url, data, extraHeaders, extraConfig) {
@@ -7,14 +8,17 @@ class BaseService {
       method: method,
       url: url,
       data: data,
-      headers: { ...extraHeaders },
+      headers: {
+        authorization: `Bearer ${LocalStorage.getAccessToken()}`,
+        ...extraHeaders,
+      },
       ...extraConfig,
     };
     try {
       const response = await axios(requestOptions);
       return response.data;
     } catch (error) {
-      message.error(error?.response.data.errors.msg || error.message, [1]);
+      message.error(error?.response?.data?.errors?.msg || error?.message, [1]);
       return null;
     }
   }

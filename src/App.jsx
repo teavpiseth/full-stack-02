@@ -12,6 +12,7 @@ import MasterLayoutDashboard from "./master-layout-dashboard/MasterLayoutDashboa
 import Login from "./pages/login/index.jsx";
 import BaseService from "./services/BaseService.js";
 import Employee from "./pages/dashboad/employee/index.jsx";
+import "./services/AxiosInterceptor.js";
 function App() {
   const [category, setCategory] = useState([]);
   useEffect(() => {
