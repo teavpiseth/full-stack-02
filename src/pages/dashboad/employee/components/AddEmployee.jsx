@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import BaseService from "../../../../services/BaseService";
+import moment from "moment";
 const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(isOpen);
@@ -19,28 +20,59 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
   };
 
   const onFinish = async (values) => {
-    const result = await BaseService.post(
-      "http://localhost:8081/api/employee/create",
-      {
-        ...values,
-        image: values.firstName,
-        dob: values.dob.format("YYYY-MM-DD"),
+    if (edit.isEdit) {
+      const result = await BaseService.put(
+        `http://localhost:8081/api/employee/update`,
+        {
+          ...values,
+          image: values.firstName,
+          dob: values.dob.format("YYYY-MM-DD"),
+          id: edit.data.Id,
+        }
+      );
+      if (result) {
+        setIsOpen(false);
+        fetchData();
       }
-    );
-    if (result) {
-      setIsOpen(false);
-      fetchData();
+    } else {
+      const result = await BaseService.post(
+        "http://localhost:8081/api/employee/create",
+        {
+          ...values,
+          image: values.firstName,
+          dob: values.dob.format("YYYY-MM-DD"),
+        }
+      );
+      if (result) {
+        setIsOpen(false);
+        fetchData();
+      }
     }
   };
 
   useEffect(() => {
-    // setOpen(isOpen);
-    form.setFieldValue("gender", edit.data.Gender);
-    form.setFieldValue("tel", edit.data.Tel);
-    form.setFieldValue("address", edit.data.Address);
-    form.setFieldValue("status", edit.data.Status);
-    form.setFieldValue("email", edit.data.Email);
+    if (edit.isEdit) {
+      form.setFieldValue("gender", edit.data.Gender);
+      form.setFieldValue("tel", edit.data.Tel);
+      form.setFieldValue("address", edit.data.Address);
+      form.setFieldValue("status", edit.data.Status);
+      form.setFieldValue("email", edit.data.Email);
+      form.setFieldValue("dob", moment(edit.data.Dob));
+      form.setFieldValue("firstName", edit.data.FirstName);
+      form.setFieldValue("lastName", edit.data.LastName);
+    }
   }, [edit, form]);
+
+  const [previewImage, setPreviewImage] = useState("");
+
+  function handleUpload(e) {
+    console.log(e);
+    if (e.target.files[0]) {
+      form.setFieldValue("image", e.target.files[0]);
+      const previewUrl = URL.createObjectURL(e.target.files[0]);
+      setPreviewImage(previewUrl);
+    }
+  }
   return (
     <>
       <Modal
@@ -176,6 +208,23 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
             ]}
           >
             <Input />
+          </Form.Item>
+
+          <Form.Item
+            style={{ display: "block" }}
+            layout="horizontal"
+            label="Image"
+            name="image"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            {previewImage && (
+              <img style={{ width: "300px" }} src={previewImage} />
+            )}
+            <input type="file" onChange={handleUpload} />
           </Form.Item>
 
           <Button type="primary" htmlType="submit" loading={loading}>
