@@ -1,6 +1,10 @@
 import { Button, Image, Switch, Table, Tag } from "antd";
 
-import { getImageView, Status } from "../../../utils/constant";
+import {
+  getImageView,
+  getImageViewServer,
+  Status,
+} from "../../../utils/constant";
 import { useEmployee } from "./hook/useEmployee";
 import AddEmployee from "./components/AddEmployee";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -20,7 +24,7 @@ const Employee = () => {
   } = useEmployee();
 
   function imageCustom(value) {
-    return <Image src={getImageView(value)} />;
+    return <Image src={getImageViewServer(value)} />;
   }
   function statusCustom(value) {
     return (

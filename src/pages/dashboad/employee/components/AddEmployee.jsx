@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import BaseService from "../../../../services/BaseService";
 import moment from "moment";
+import { getImageViewServer } from "../../../../utils/constant";
 const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(isOpen);
@@ -21,28 +22,46 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
 
   const onFinish = async (values) => {
     if (edit.isEdit) {
+      const formData = new FormData();
+
+      formData.append("image", values.image);
+      formData.append("firstName", values.firstName);
+      formData.append("lastName", values.lastName);
+      formData.append("gender", values.gender);
+      formData.append("dob", values.dob.format("YYYY-MM-DD"));
+      formData.append("tel", values.tel);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("status", values.status);
+      formData.append("id", edit.data.Id);
+      formData.append("imageOld", edit.data.Image);
       const result = await BaseService.put(
         `http://localhost:8081/api/employee/update`,
-        {
-          ...values,
-          image: values.firstName,
-          dob: values.dob.format("YYYY-MM-DD"),
-          id: edit.data.Id,
-        }
+        formData,
+        { "content-type": "multipart/form-data" }
       );
       if (result) {
         setIsOpen(false);
         fetchData();
       }
     } else {
+      const formData = new FormData();
+      formData.append("image", values.image);
+      formData.append("firstName", values.firstName);
+      formData.append("lastName", values.lastName);
+      formData.append("gender", values.gender);
+      formData.append("dob", values.dob.format("YYYY-MM-DD"));
+      formData.append("tel", values.tel);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("status", values.status);
+      console.log(formData);
       const result = await BaseService.post(
         "http://localhost:8081/api/employee/create",
-        {
-          ...values,
-          image: values.firstName,
-          dob: values.dob.format("YYYY-MM-DD"),
-        }
+        formData,
+        { "content-type": "multipart/form-data" }
       );
+
       if (result) {
         setIsOpen(false);
         fetchData();
@@ -60,13 +79,13 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
       form.setFieldValue("dob", moment(edit.data.Dob));
       form.setFieldValue("firstName", edit.data.FirstName);
       form.setFieldValue("lastName", edit.data.LastName);
+      form.setFieldValue("image", edit.data.Image);
     }
   }, [edit, form]);
 
   const [previewImage, setPreviewImage] = useState("");
 
   function handleUpload(e) {
-    console.log(e);
     if (e.target.files[0]) {
       form.setFieldValue("image", e.target.files[0]);
       const previewUrl = URL.createObjectURL(e.target.files[0]);
@@ -221,6 +240,12 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
               },
             ]}
           >
+            {edit.isEdit && !previewImage && (
+              <img
+                style={{ width: "300px" }}
+                src={getImageViewServer(edit.data.Image)}
+              />
+            )}
             {previewImage && (
               <img style={{ width: "300px" }} src={previewImage} />
             )}
