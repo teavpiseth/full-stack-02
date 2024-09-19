@@ -1,5 +1,5 @@
 import { Image, Modal, notification, Tag } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Gender, getImageView, Status } from "../../../../utils/constant";
 import moment from "moment";
 import BaseService from "../../../../services/BaseService";
@@ -9,9 +9,15 @@ export function useEmployee() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [fixedTop, setFixedTop] = useState(false);
   const [dataList, setDataList] = useState([]);
+  const [searchName, setSearchName] = useState("");
   const [edit, setEdit] = useState({
     isEdit: false,
     data: {},
+  });
+  const pagination = useRef({
+    current: 1, //page
+    pageSize: 3, // limit
+    totalRecode: 0,
   });
 
   function columns({ imageCustom, statusCustom, action }) {
@@ -91,11 +97,17 @@ export function useEmployee() {
     ];
   }
 
-  async function fetchData() {
-    const res = await BaseService.get(
-      "http://localhost:8081/api/employee/get-list"
-    );
+  async function fetchData(search = "") {
+    let API = "http://localhost:8081/api/employee/get-list";
+
+    API += `?page=${pagination.current.current}&limit=${pagination.current.pageSize}`;
+    if (search) {
+      API += `&search_name=${search}`;
+    }
+
+    const res = await BaseService.get(API);
     setDataList(res.data);
+    pagination.current.totalRecode = res.totalRecord;
   }
 
   const confirmDelete = async (id) => {
@@ -137,5 +149,8 @@ export function useEmployee() {
     handleDelete,
     edit,
     setEdit,
+    searchName,
+    setSearchName,
+    pagination,
   };
 }

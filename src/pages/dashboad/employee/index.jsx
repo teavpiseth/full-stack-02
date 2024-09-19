@@ -1,4 +1,4 @@
-import { Button, Image, Switch, Table, Tag } from "antd";
+import { Button, Image, Input, Switch, Table, Tag } from "antd";
 
 import {
   getImageView,
@@ -8,6 +8,7 @@ import {
 import { useEmployee } from "./hook/useEmployee";
 import AddEmployee from "./components/AddEmployee";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import useDebounce from "../../../utils/useDebounce";
 
 const Employee = () => {
   const {
@@ -21,7 +22,12 @@ const Employee = () => {
     handleDelete,
     edit,
     setEdit,
+    searchName,
+    setSearchName,
+    pagination,
   } = useEmployee();
+
+  const debounce = useDebounce();
 
   function imageCustom(value) {
     return <Image src={getImageViewServer(value)} />;
@@ -34,7 +40,22 @@ const Employee = () => {
 
   return (
     <>
-      <div style={{ textAlign: "right" }}>
+      <div
+        style={{
+          textAlign: "right",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Input
+          value={searchName}
+          onChange={(event) => {
+            setSearchName(event.target.value);
+            debounce(() => fetchData(event.target.value), 2000);
+          }}
+          placeholder="Search Name"
+          style={{ width: "200px" }}
+        />
         <Button
           type="primary"
           style={{ marginBottom: "10px" }}
@@ -79,29 +100,14 @@ const Employee = () => {
         scroll={{
           x: 1500,
         }}
-        summary={() => (
-          <Table.Summary fixed={fixedTop ? "top" : "bottom"}>
-            <Table.Summary.Row>
-              <Table.Summary.Cell index={0} colSpan={2}>
-                <Switch
-                  checkedChildren="Fixed Top"
-                  unCheckedChildren="Fixed Top"
-                  checked={fixedTop}
-                  onChange={() => {
-                    setFixedTop(!fixedTop);
-                  }}
-                />
-              </Table.Summary.Cell>
-              <Table.Summary.Cell index={2} colSpan={8}>
-                Scroll Context
-              </Table.Summary.Cell>
-              <Table.Summary.Cell index={10}>Fix Right</Table.Summary.Cell>
-            </Table.Summary.Row>
-          </Table.Summary>
-        )}
-        // antd site header height
-        sticky={{
-          offsetHeader: 64,
+        onChange={(_pagination) => {
+          pagination.current.current = _pagination.current;
+          fetchData();
+        }}
+        pagination={{
+          current: pagination.current.current,
+          pageSize: pagination.current.pageSize,
+          total: pagination.current.totalRecode,
         }}
       />
     </>
