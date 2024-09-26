@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Form, Input, Modal, Select } from "antd";
 import BaseService from "../../../../services/BaseService";
-import moment from "moment";
 import { getImageViewServer } from "../../../../utils/constant";
-const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
+const AddCategory = ({ isOpen, setIsOpen, fetchData, edit, categoryList }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(isOpen);
   const [form] = Form.useForm();
@@ -23,20 +22,17 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
   const onFinish = async (values) => {
     if (edit.isEdit) {
       const formData = new FormData();
-
-      formData.append("image", values.image);
-      formData.append("firstName", values.firstName);
-      formData.append("lastName", values.lastName);
-      formData.append("gender", values.gender);
-      formData.append("dob", values.dob.format("YYYY-MM-DD"));
-      formData.append("tel", values.tel);
-      formData.append("email", values.email);
-      formData.append("address", values.address);
-      formData.append("status", values.status);
       formData.append("id", edit.data.Id);
+      formData.append("image", values.image);
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("status", values.status);
+      if (values.parentsId) {
+        formData.append("parentsId", values.parentsId);
+      }
       formData.append("imageOld", edit.data.Image);
       const result = await BaseService.put(
-        `http://localhost:8081/api/employee/update`,
+        `http://localhost:8081/api/category/update`,
         formData,
         { "content-type": "multipart/form-data" }
       );
@@ -47,17 +43,14 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
     } else {
       const formData = new FormData();
       formData.append("image", values.image);
-      formData.append("firstName", values.firstName);
-      formData.append("lastName", values.lastName);
-      formData.append("gender", values.gender);
-      formData.append("dob", values.dob.format("YYYY-MM-DD"));
-      formData.append("tel", values.tel);
-      formData.append("email", values.email);
-      formData.append("address", values.address);
+      formData.append("name", values.name);
+      formData.append("description", values.description);
       formData.append("status", values.status);
-      console.log(formData);
+      if (values.parentsId) {
+        formData.append("parentsId", values.parentsId);
+      }
       const result = await BaseService.post(
-        "http://localhost:8081/api/employee/create",
+        "http://localhost:8081/api/category/create",
         formData,
         { "content-type": "multipart/form-data" }
       );
@@ -71,15 +64,11 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
 
   useEffect(() => {
     if (edit.isEdit) {
-      form.setFieldValue("gender", edit.data.Gender);
-      form.setFieldValue("tel", edit.data.Tel);
-      form.setFieldValue("address", edit.data.Address);
       form.setFieldValue("status", edit.data.Status);
-      form.setFieldValue("email", edit.data.Email);
-      form.setFieldValue("dob", moment(edit.data.Dob));
-      form.setFieldValue("firstName", edit.data.FirstName);
-      form.setFieldValue("lastName", edit.data.LastName);
+      form.setFieldValue("name", edit.data.Name);
       form.setFieldValue("image", edit.data.Image);
+      form.setFieldValue("description", edit.data.Description);
+      form.setFieldValue("parentsId", edit.data.ParentsId);
     }
   }, [edit, form]);
 
@@ -92,6 +81,16 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
       setPreviewImage(previewUrl);
     }
   }
+
+  const listOption = useMemo(() => {
+    return categoryList?.map((item) => {
+      return {
+        value: item.Id,
+        label: item.Name,
+      };
+    });
+  }, [categoryList]);
+
   return (
     <>
       <Modal
@@ -110,8 +109,8 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
           {/* Name Image Gender Dob Tel Email Address Status */}
           <Form.Item
             style={{ display: "block" }}
-            label="First Name"
-            name="firstName"
+            label="Name"
+            name="name"
             rules={[
               {
                 required: true,
@@ -122,8 +121,8 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
           </Form.Item>
           <Form.Item
             style={{ display: "block" }}
-            label="Last Name"
-            name="lastName"
+            label="Description"
+            name="description"
             rules={[
               {
                 required: true,
@@ -132,87 +131,12 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
           >
             <Input />
           </Form.Item>
-
           <Form.Item
             style={{ display: "block" }}
-            layout="horizontal"
-            label="Gender"
-            name="gender"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
+            label="Parent"
+            name="parentsId"
           >
-            <Select
-              allowClear
-              options={[
-                {
-                  value: "male",
-                  label: "Male",
-                },
-                {
-                  value: "female",
-                  label: "Female",
-                },
-                {
-                  value: "other",
-                  label: "Other",
-                },
-              ]}
-              placeholder="select it"
-            />
-          </Form.Item>
-
-          <Form.Item
-            style={{ display: "block" }}
-            layout="horizontal"
-            label="Date of birth"
-            name="dob"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <DatePicker onChange={() => {}} form="YYYY-MM-DD" />
-          </Form.Item>
-
-          <Form.Item
-            style={{ display: "block" }}
-            layout="horizontal"
-            label="Tel"
-            name="tel"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            style={{ display: "block" }}
-            layout="horizontal"
-            label="Email"
-            name="email"
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            style={{ display: "block" }}
-            layout="horizontal"
-            label="Address"
-            name="address"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
+            <Select options={listOption}></Select>
           </Form.Item>
 
           <Form.Item
@@ -260,4 +184,4 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
     </>
   );
 };
-export default AddEmployee;
+export default AddCategory;

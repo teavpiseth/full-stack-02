@@ -13,24 +13,17 @@ import Login from "./pages/login/index.jsx";
 import BaseService from "./services/BaseService.js";
 import Employee from "./pages/dashboad/employee/index.jsx";
 import "./services/AxiosInterceptor.js";
+import Category from "./pages/dashboad/category/index.jsx";
+import Product from "./pages/dashboad/product/index.jsx";
 function App() {
-  const [category, setCategory] = useState([]);
-  useEffect(() => {
-    const apiUrl = "https://piseth.site/api/web/category/get-list";
-
-    BaseService.get(apiUrl).then(function (response) {
-      setCategory(response.list);
-    });
-  }, []);
-
   function alertAtAppComponent() {
     alert("Hello from parent component");
   }
+
   return (
     <>
       <WebShareData
         data={{
-          category: category,
           alertAtAppComponent: alertAtAppComponent,
         }}
       >
@@ -45,6 +38,14 @@ function App() {
               <Route
                 path="/dashboard/customer"
                 element={<h2>Hello customer</h2>}
+              ></Route>
+              <Route
+                path="/dashboard/category"
+                element={<Category></Category>}
+              ></Route>
+              <Route
+                path="/dashboard/product-list"
+                element={<Product></Product>}
               ></Route>
 
               <Route path="/dashboard/*" element={<NotFound />}></Route>

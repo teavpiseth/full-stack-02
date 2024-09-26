@@ -5,12 +5,13 @@ import {
   getImageViewServer,
   Status,
 } from "../../../utils/constant";
-import { useCategory } from "./hook/useCategory";
-import AddEmployee from "./components/AddCategory";
+import { useProduct } from "./hook/useProduct";
+import AddProduct from "./components/AddProduct";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import useDebounce from "../../../utils/useDebounce";
+import UploadImage from "./components/UploadImage";
 
-const Category = () => {
+const Product = () => {
   const {
     fixedTop,
     setFixedTop,
@@ -25,7 +26,11 @@ const Category = () => {
     searchName,
     setSearchName,
     pagination,
-  } = useCategory();
+    dataCategory,
+    fetchCategory,
+    isOpenModelUpload,
+    setIsOpenModelUpload,
+  } = useProduct();
 
   const debounce = useDebounce();
 
@@ -59,13 +64,16 @@ const Category = () => {
         <Button
           type="primary"
           style={{ marginBottom: "10px" }}
-          onClick={() => setIsOpenModal(true)}
+          onClick={() => {
+            fetchCategory();
+            setIsOpenModal(true);
+          }}
         >
-          Add Category
+          Add Product
         </Button>
       </div>
       {isOpenModal && (
-        <AddEmployee
+        <AddProduct
           isOpen={isOpenModal}
           setIsOpen={(value) => {
             setIsOpenModal(value);
@@ -73,7 +81,13 @@ const Category = () => {
           }}
           fetchData={fetchData}
           edit={edit}
-          categoryList={dataList}
+          categoryList={dataCategory}
+        />
+      )}
+      {isOpenModelUpload && (
+        <UploadImage
+          setIsOpenModelUpload={setIsOpenModelUpload}
+          isOpen={isOpenModelUpload}
         />
       )}
 
@@ -83,6 +97,9 @@ const Category = () => {
           statusCustom: statusCustom,
           action: (record) => (
             <div>
+              <Button onClick={() => setIsOpenModelUpload(true)}>
+                Add/Edit image
+              </Button>
               <DeleteOutlined
                 onClick={() => handleDelete(record)}
                 style={{ color: "red" }}
@@ -114,4 +131,4 @@ const Category = () => {
     </>
   );
 };
-export default Category;
+export default Product;
