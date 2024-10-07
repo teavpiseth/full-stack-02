@@ -30,6 +30,8 @@ const Product = () => {
     fetchCategory,
     isOpenModelUpload,
     setIsOpenModelUpload,
+    uploadProductId,
+    setUploadProductId,
   } = useProduct();
 
   const debounce = useDebounce();
@@ -88,6 +90,7 @@ const Product = () => {
         <UploadImage
           setIsOpenModelUpload={setIsOpenModelUpload}
           isOpen={isOpenModelUpload}
+          uploadProductId={uploadProductId}
         />
       )}
 
@@ -97,7 +100,12 @@ const Product = () => {
           statusCustom: statusCustom,
           action: (record) => (
             <div>
-              <Button onClick={() => setIsOpenModelUpload(true)}>
+              <Button
+                onClick={() => {
+                  setIsOpenModelUpload(true);
+                  setUploadProductId(record.Id);
+                }}
+              >
                 Add/Edit image
               </Button>
               <DeleteOutlined

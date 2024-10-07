@@ -17,6 +17,7 @@ export function useProduct() {
     isEdit: false,
     data: {},
   });
+  const [uploadProductId, setUploadProductId] = useState(0);
   const pagination = useRef({
     current: 1, //page
     pageSize: 3, // limit
@@ -165,5 +166,7 @@ export function useProduct() {
     dataCategory,
     isOpenModelUpload,
     setIsOpenModelUpload,
+    uploadProductId,
+    setUploadProductId,
   };
 }

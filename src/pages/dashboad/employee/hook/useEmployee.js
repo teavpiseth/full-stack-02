@@ -106,7 +106,12 @@ export function useEmployee() {
     }
 
     const res = await BaseService.get(API);
-    setDataList(res.data);
+    setDataList(
+      res.data?.map((item) => ({
+        ...item,
+        key: item.Id,
+      }))
+    );
     pagination.current.totalRecode = res.totalRecord;
   }
 

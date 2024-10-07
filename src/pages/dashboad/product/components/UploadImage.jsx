@@ -1,8 +1,13 @@
 /* eslint-disable react/prop-types */
 import { Button, Form, Input, message, Modal } from "antd";
 import React, { useState } from "react";
+import BaseService from "../../../../services/BaseService";
 
-export default function UploadImage({ isOpen, setIsOpenModelUpload }) {
+export default function UploadImage({
+  isOpen,
+  setIsOpenModelUpload,
+  uploadProductId,
+}) {
   const [open, setIsOpen] = useState(isOpen);
   const [loading, setLoading] = useState(false);
   const handleOk = () => {
@@ -15,8 +20,20 @@ export default function UploadImage({ isOpen, setIsOpenModelUpload }) {
   };
   const [form] = Form.useForm();
 
-  function onFinish(values) {
-    console.log("Success:", values);
+  async function onFinish() {
+    const formData = new FormData();
+    selectedFiles.forEach((file) => {
+      formData.append("image", file);
+    });
+    formData.append("productId", uploadProductId);
+    formData.append("updateBy", 8);
+    formData.append("createBy", 8);
+    const result = await BaseService.post(
+      `http://localhost:8081/api/product/upload`,
+      formData,
+      { contentType: "multipart/form-data" }
+    );
+    console.log(result);
   }
 
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -36,6 +53,7 @@ export default function UploadImage({ isOpen, setIsOpenModelUpload }) {
       return;
     }
     const newSelectedFiles = [...selectedFiles, ...files];
+    form.setFieldValue("images", newSelectedFiles);
     setSelectedFiles(newSelectedFiles);
 
     const previews = newSelectedFiles.map((file) => URL.createObjectURL(file));
@@ -76,7 +94,14 @@ export default function UploadImage({ isOpen, setIsOpenModelUpload }) {
               {imagePreviews.length > 0 && (
                 <div style={{ display: "flex", flexWrap: "wrap" }}>
                   {imagePreviews.map((preview, index) => (
-                    <div key={index} style={{ margin: "10px" }}>
+                    <div
+                      key={index}
+                      style={{
+                        margin: "10px",
+                        boxShadow: "0 0 0 1px #ccc",
+                        borderRadius: "5px",
+                      }}
+                    >
                       <img
                         src={preview}
                         alt={`Preview ${index + 1}`}
