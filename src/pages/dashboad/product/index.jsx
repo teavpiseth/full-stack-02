@@ -37,7 +37,12 @@ const Product = () => {
   const debounce = useDebounce();
 
   function imageCustom(value) {
-    return <Image src={getImageViewServer(value)} />;
+    const _value = value.map((item) => getImageViewServer(item));
+    return (
+      <Image.PreviewGroup items={_value}>
+        <Image src={getImageViewServer(value[0])} />
+      </Image.PreviewGroup>
+    );
   }
   function statusCustom(value) {
     return (

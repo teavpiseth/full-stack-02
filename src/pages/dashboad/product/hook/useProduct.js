@@ -1,6 +1,11 @@
 import { Image, Modal, notification, Tag } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { Gender, getImageView, Status } from "../../../../utils/constant";
+import {
+  Gender,
+  getImageView,
+  getImageViewServer,
+  Status,
+} from "../../../../utils/constant";
 import moment from "moment";
 import BaseService from "../../../../services/BaseService";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -40,6 +45,13 @@ export function useProduct() {
         dataIndex: "Name",
         key: "Name",
         fixed: "left",
+      },
+      {
+        title: "Image",
+        dataIndex: "image",
+        key: "1",
+        width: 150,
+        render: (record, text, index) => imageCustom(text.Image),
       },
 
       {
