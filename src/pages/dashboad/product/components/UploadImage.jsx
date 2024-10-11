@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { Button, Form, Input, message, Modal } from "antd";
-import React, { useState } from "react";
+import { Button, Form, message, Modal } from "antd";
+import { useState } from "react";
 import BaseService from "../../../../services/BaseService";
 
 export default function UploadImage({
@@ -21,6 +21,7 @@ export default function UploadImage({
   const [form] = Form.useForm();
 
   async function onFinish() {
+    setLoading(true);
     const formData = new FormData();
     selectedFiles.forEach((file) => {
       formData.append("image", file);
@@ -34,6 +35,7 @@ export default function UploadImage({
       { contentType: "multipart/form-data" }
     );
     console.log(result);
+    setLoading(false);
   }
 
   const [selectedFiles, setSelectedFiles] = useState([]);

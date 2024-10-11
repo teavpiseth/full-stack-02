@@ -55,6 +55,7 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
       formData.append("email", values.email);
       formData.append("address", values.address);
       formData.append("status", values.status);
+      formData.append("password", values.password);
       console.log(formData);
       const result = await BaseService.post(
         "http://localhost:8081/api/employee/create",
@@ -131,6 +132,18 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            style={{ display: "block" }}
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input type="password" />
           </Form.Item>
 
           <Form.Item
