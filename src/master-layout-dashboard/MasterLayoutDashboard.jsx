@@ -29,9 +29,13 @@ const items = [
     getItem("Bill", "4"),
     getItem("Alex", "5"),
   ]),
-  getItem("Product", "sub2", <TeamOutlined />, [
+  getItem("Product", "product", <TeamOutlined />, [
     getItem("category", "/dashboard/category"),
     getItem("product-list", "/dashboard/product-list"),
+  ]),
+  getItem("Role", "/dashboard/role", <TeamOutlined />, [
+    getItem("Assess Key", "/dashboard/accessKey"),
+    getItem("Role", "/dashboard/role"),
   ]),
   getItem("Files", "/dashboard/Files", <FileOutlined />),
   getItem("Logout", "/dashboard/login", <LogoutOutlined />),
