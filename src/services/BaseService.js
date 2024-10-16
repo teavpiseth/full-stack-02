@@ -18,6 +18,7 @@ class BaseService {
       const response = await axios(requestOptions);
       return response.data;
     } catch (error) {
+      console.log({ error });
       message.error(error?.response?.data?.errors?.msg || error?.message, [1]);
       return null;
     }

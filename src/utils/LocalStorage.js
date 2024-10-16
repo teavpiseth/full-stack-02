@@ -1,11 +1,12 @@
 class LocalStorage {
   setUserInfo(data) {
     if (data) {
-      this.setAccessToken(data.accessToken);
-      this.setRefreshToken(data.refreshToken);
-      this.setExpiredIn(data.expiredIn);
-      this.setUserRole(data.role);
-      this.setUser(data.user);
+      console.log(data, "data");
+      this.setAccessToken(data.result.accessToken);
+      this.setRefreshToken(data.result.refreshToken);
+      // this.setExpiredIn(data.expiredIn);
+      // this.setUserRole(data.role);
+      this.setUser(data.result);
     }
   }
 

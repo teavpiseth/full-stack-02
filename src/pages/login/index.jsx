@@ -19,12 +19,12 @@ const Login = () => {
 
   async function loginHandler(value) {
     const res = await BaseService.post(
-      "https://piseth.site/api/employee/login",
+      "http://localhost:8081/api/employee/login",
       value
     );
-    console.log(res, "res");
+    // console.log(res, "res");
     if (res) {
-      LocalStorage.setUserInfo(res);
+      LocalStorage.setUserInfo(res.data);
       navigate("/dashboard");
     }
   }
@@ -56,7 +56,7 @@ const Login = () => {
       >
         <Form.Item
           label="Username"
-          name="username"
+          name="tel"
           rules={[
             {
               required: true,

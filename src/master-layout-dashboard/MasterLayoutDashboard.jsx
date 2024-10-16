@@ -10,7 +10,7 @@ import {
 import { Layout, Menu, theme } from "antd";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { getImageView } from "../utils/constant";
+import { getImageView, getImageViewServer } from "../utils/constant";
 import LocalStorage from "../utils/LocalStorage";
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -105,7 +105,7 @@ const MasterLayoutDashboard = () => {
                 height: 50,
                 marginLeft: 10,
               }}
-              src={getImageView(LocalStorage.getUser().Image)}
+              src={getImageViewServer(LocalStorage.getUser().Image)}
             />
           </div>
         </div>
