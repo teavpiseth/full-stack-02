@@ -15,6 +15,7 @@ import Employee from "./pages/dashboad/employee/index.jsx";
 import "./services/AxiosInterceptor.js";
 import Category from "./pages/dashboad/category/index.jsx";
 import Product from "./pages/dashboad/product/index.jsx";
+import AccessKey from "./pages/system/access-key/index.jsx";
 function App() {
   function alertAtAppComponent() {
     alert("Hello from parent component");
@@ -46,6 +47,10 @@ function App() {
               <Route
                 path="/dashboard/product-list"
                 element={<Product></Product>}
+              ></Route>
+              <Route
+                path="/dashboard/access-key"
+                element={<AccessKey></AccessKey>}
               ></Route>
 
               <Route path="/dashboard/*" element={<NotFound />}></Route>

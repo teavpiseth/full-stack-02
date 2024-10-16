@@ -33,8 +33,8 @@ const items = [
     getItem("category", "/dashboard/category"),
     getItem("product-list", "/dashboard/product-list"),
   ]),
-  getItem("Role", "/dashboard/role", <TeamOutlined />, [
-    getItem("Assess Key", "/dashboard/accessKey"),
+  getItem("System", "system", <TeamOutlined />, [
+    getItem("Assess Key", "/dashboard/access-key"),
     getItem("Role", "/dashboard/role"),
   ]),
   getItem("Files", "/dashboard/Files", <FileOutlined />),
