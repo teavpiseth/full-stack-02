@@ -7,9 +7,10 @@ class AuthService {
     const res = await BaseService.post(this.api, {
       refreshToken: LocalStorage.getRefreshToken(),
     });
-    if (res?.errors) {
+    if (res?.errors || !res) {
       //   console.log({ res });
-      window.location.href = "/login";
+      window.location.href = "/dashboard/login";
+      localStorage.clear();
     } else {
       // LocalStorage.setUserInfo({ ...res, user: res.data.data });
       LocalStorage.setAccessToken(res.data.accessToken);
