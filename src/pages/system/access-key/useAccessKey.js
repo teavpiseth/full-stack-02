@@ -53,11 +53,11 @@ const useAccessKey = () => {
   async function getList() {
     const queryUrl = "";
     const response = await AccessKeyService.fetchList(queryUrl);
-    if (response?.list) {
+    if (response?.data) {
       setList(
-        response.list.map((tableRow, index) => ({ ...tableRow, key: index }))
+        response.data.map((tableRow, index) => ({ ...tableRow, key: index }))
       );
-      setListAll(response.listAll);
+      // setListAll(response.listAll);
     }
   }
 

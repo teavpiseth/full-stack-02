@@ -1,10 +1,10 @@
 import  BaseService  from "../../../services/BaseService";
 
 const ApiUrl = {
-  getList: "/access-key/get-list?",
-  addNew: "/access-key/create",
-  update: "/access-key/update",
-  delete: "/access-key/delete",
+  getList: "http://localhost:8081/api/access-key/get-list?",
+  addNew: "http://localhost:8081/api/access-key/create",
+  update: "http://localhost:8081/api/access-key/update",
+  delete: "http://localhost:8081/api/access-key/delete",
 };
 
 class AccessKeyService {
@@ -29,5 +29,4 @@ class AccessKeyService {
   }
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default new AccessKeyService();

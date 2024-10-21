@@ -16,9 +16,10 @@ class BaseService {
     };
     try {
       const response = await axios(requestOptions);
-      return response.data;
+      // console.log( response );
+      return response?.data;
     } catch (error) {
-      console.log({ error });
+      // console.log( error );
       message.error(error?.response?.data?.errors?.msg || error?.message, [1]);
       return null;
     }

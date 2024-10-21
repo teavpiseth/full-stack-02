@@ -1,8 +1,8 @@
+/* eslint-disable react/prop-types */
 import { Button, Form, Input, Select, Space } from "antd";
 import React, { useEffect } from "react";
 import AccessKeyService from "./AccessKeyService";
 import  StringUtil from "../../../utils/String";
-// eslint-disable-next-line react/prop-types
 function AddNew({ setOpenDialog, list, dialog, close }) {
   const layout = {
     labelCol: {
@@ -32,7 +32,7 @@ function AddNew({ setOpenDialog, list, dialog, close }) {
       res = await AccessKeyService.addNew(_values);
     }
 
-    if (res?.data) {
+    if (res?.data && !res?.data?.error) {
       close();
     }
   }

@@ -23,7 +23,7 @@ axios.interceptors.response.use(
     return response;
   },
   async function (error) {
-    console.log({ error });
+    // console.log({ error });
     const config = error.config;
     if (
       error.response.status === 401 &&
@@ -49,5 +49,6 @@ axios.interceptors.response.use(
       // Do something with response error
       return Promise.reject(error);
     }
+    return Promise.reject(error);
   }
 );
