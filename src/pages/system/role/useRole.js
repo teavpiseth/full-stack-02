@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import RoleService from "./RoleService";
 import { useRef } from "react";
-import useDebounce from "src/utils/debounce";
-import RouteUtil from "src/utils/RouteUtil";
-import  StringUtil from "src/utils";
-import { useNavigate  } from "react-router-dom";
+import useDebounce from "../../../utils/useDebounce";
+import StringUtil from "../../../utils/String";
+import { useNavigate } from "react-router-dom";
 
 const useRole = () => {
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
   const filter = useRef({
     search: null,
     Status: null,
@@ -23,66 +22,6 @@ const useRole = () => {
     isEdit: false,
     editId: 0,
   });
-
-  const columns = [
-    {
-      title: "No",
-      dataIndex: "Id",
-      render: (text, record, index) => {
-        return pagination.pageSize * (pagination.current - 1) + (index + 1);
-      },
-    },
-    {
-      title: "Name",
-      dataIndex: "Name",
-    },
-    {
-      title: "Code",
-      dataIndex: "Code",
-    },
-    {
-      title: "Status",
-      dataIndex: "Status",
-      render: (text) => {
-        return (
-          <Tag color={`${text ? "cyan" : "red"}`}>
-            {StringUtil.getNameStatus(text)}
-          </Tag>
-        );
-      },
-    },
-    {
-      title: "CreateAt",
-      dataIndex: "CreateAt",
-      render: (date) => {
-        return moment(date).format("DD-MM-YYYY");
-      },
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (text, record) => (
-        <Space>
-          <Button type="primary" size="medium" onClick={() => {navigate(`/add-role-permission?id=${record.Id}&name=${record.Name}`)}}>
-            Add Permission
-          </Button>
-          <Button
-            onClick={() => editHandle({ text, record })}
-            type="primary"
-            icon={<EditOutlined />}
-            size="medium"
-          ></Button>
-          <Button
-            onClick={() => deleteHandle(record)}
-            type="primary"
-            danger
-            icon={<DeleteOutlined />}
-            size="medium"
-          ></Button>
-        </Space>
-      ),
-    },
-  ];
 
   function onChangeTable(table) {
     setPagination({ ...pagination, current: table.current });
@@ -102,11 +41,7 @@ const useRole = () => {
     const Id = record.Id;
     Modal.confirm({
       title: "Delete!",
-      content: (
-        <div>
-          <p>Are you sure you want to delete?</p>
-        </div>
-      ),
+      content: "Are you sure you want to delete?",
       onOk() {
         promiseDelete(Id);
       },
@@ -114,11 +49,11 @@ const useRole = () => {
   }
 
   async function getList() {
-    const queryUrl = RouteUtil.objectToQueryString(filter.current);
-    const response = await RoleService.fetchList(queryUrl);
-    if (response?.list) {
+    // const queryUrl = filter.current;
+    const response = await RoleService.fetchList("");
+    if (response?.data) {
       setList(
-        response.list.map((tableRow, index) => ({ ...tableRow, key: index }))
+        response.data.map((tableRow, index) => ({ ...tableRow, key: index }))
       );
     }
   }
@@ -151,7 +86,6 @@ const useRole = () => {
   }, []);
 
   return {
-    columns,
     list,
     pagination,
     dialog,
@@ -161,6 +95,8 @@ const useRole = () => {
     onChangeTable,
     onChangePageSize,
     triggerCloseModal,
+    editHandle,
+    deleteHandle,
   };
 };
 

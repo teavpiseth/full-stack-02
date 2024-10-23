@@ -1,7 +1,16 @@
-import { Button, Col, Collapse, Form, Input, Layout, Row, Space } from "antd";
-import React from "react";
+import {
+  Button,
+  Checkbox,
+  Col,
+  Collapse,
+  Form,
+  Input,
+  Layout,
+  Row,
+  Space,
+} from "antd";
+
 import useRolePermission from "./useRolePermission";
-import { NoPermission } from "src/components/Exception";
 
 export default function AddRolePermission() {
   const layout = {
@@ -12,11 +21,42 @@ export default function AddRolePermission() {
       span: 24,
     },
   };
-  const { panelList, submitHandle, form, param } = useRolePermission();
+  const {
+    submitHandle,
+    form,
+    activeKey,
+    setActiveKey,
+    list,
+    setList,
+    checked,
+    roleList,
+    setChecked,
+  } = useRolePermission();
 
-  if(!param?.Id?.toString()){
-    return <NoPermission></NoPermission>
+  function getChildren(data) {
+    // console.log(data);
+    // return <>hi</>;
+    if (data?.children?.length > 0) {
+      return data?.children?.map((item) => {
+        return (
+          <div key={item.Id}>
+            <Checkbox
+              onChange={(event) =>
+                setChecked({ ...checked, [item.Id]: event.target.checked })
+              }
+              checked={checked[item.Id]}
+            ></Checkbox>{" "}
+            {item.Name}
+          </div>
+        );
+      });
+    } else {
+      return [];
+    }
   }
+
+  console.log(checked, "checked");
+
   return (
     <>
       <Layout>
@@ -29,12 +69,12 @@ export default function AddRolePermission() {
               onFinish={(values) => {
                 submitHandle(values);
               }}
-              style={{
-                maxWidth: 600,
-              }}
+              // style={{
+              //   maxWidth: 600,
+              // }}
             >
               <Form.Item
-                name="roleName"
+                name="name"
                 label="Role"
                 rules={[
                   {
@@ -46,15 +86,46 @@ export default function AddRolePermission() {
               </Form.Item>
 
               {/* Panel blog */}
-              <Row gutter={16}>
-                {panelList.map((item) => {
-                  return (
-                    <Col key={item.key} className="gutter-row" span={8}>
-                      <Collapse items={[item]}></Collapse>
-                    </Col>
-                  );
-                })}
+              <Row gutter={[16, 16]}>
+                {list?.map((item) => (
+                  <Col span={12} key={item.Id}>
+                    <Collapse
+                      items={[
+                        {
+                          key: item.Id,
+                          label: (
+                            <div>
+                              <Checkbox
+                                checked={checked[item.Id]}
+                                onChange={(event) =>
+                                  setChecked({
+                                    ...checked,
+                                    [item.Id]: event.target.checked,
+                                  })
+                                }
+                              ></Checkbox>{" "}
+                              {item.Name}
+                            </div>
+                          ),
+                          children: getChildren(item),
+                        },
+                      ]}
+                      collapsible="icon"
+                      activeKey={item.activeKey}
+                      onChange={(e) => {
+                        const _list = list;
+                        _list.map((_item) => {
+                          if (_item.Id === item.Id) {
+                            _item.activeKey = e;
+                          }
+                        });
+                        setList([..._list]);
+                      }}
+                    />
+                  </Col>
+                ))}
               </Row>
+
               <Form.Item style={{ marginTop: 20 }}>
                 <Space>
                   <Button type="primary" htmlType="submit">

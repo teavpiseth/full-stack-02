@@ -36,6 +36,7 @@ const items = [
   getItem("System", "system", <TeamOutlined />, [
     getItem("Assess Key", "/dashboard/access-key"),
     getItem("Role", "/dashboard/role"),
+    getItem("Add Role Permission", "/dashboard/add-role-permission"),
   ]),
   getItem("Files", "/dashboard/Files", <FileOutlined />),
   getItem("Logout", "/dashboard/login", <LogoutOutlined />),

@@ -1,201 +1,106 @@
-import { useEffect, useRef, useState } from "react";
-import RolePermissionService from "./RolePermissionService";
-import { Checkbox, Collapse, Form } from "antd";
-import { useLocation } from "react-router-dom";
-import RouteUtil from "src/utils/RouteUtil";
-import LocalStorage from "src/utils/LocalStorage";
 // import RoleService from "../role/RoleService";
+
+import { Form } from "antd";
+import { useEffect, useState } from "react";
+import BaseService from "../../../services/BaseService";
+import { useLocation } from "react-router-dom";
 
 function useRolePermission() {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
 
-  // Access specific query parameters
-  const Id = queryParams.get("id");
-  const Name = queryParams.get("name");
-  // console.log(Id, Name);
-
-  const [form] = Form.useForm();
-
-  const [panelList, setPanelList] = useState([]);
-  const accessible = useRef([]);
-  const accessKeyRef = useRef({
-    list: [],
-    listGroup: [],
-  });
-  const [newChecked, setNewChecked] = useState([]);
-  const [removeChecked, setRemoveChecked] = useState([]);
-
-  let accessibleObj = arrayObjToObj(accessible.current);
-  const removeCheckedObj = arrayObjToObj(removeChecked);
-  const checkedObj = arrayObjToObj(newChecked);
-
-  function checkBoxHandle(accessKey, isChecked) {
-    const isPreviousValue = accessible.current?.find(
-      (item) => item.Code === accessKey.Code
-    )?.Code
-      ? true
-      : false;
-
-    if (isChecked === false) {
-      if (isPreviousValue) {
-        setRemoveChecked([
-          ...removeChecked,
-          { ...accessKey, roleAccessId: accessibleObj?.[accessKey.Code]?.Id },
-        ]);
-      } else {
-        setNewChecked(
-          newChecked?.filter((item) => item.Code !== accessKey.Code) ?? []
-        );
-      }
-    } else {
-      // const hasParent = accessKey?.ParentId?.toString();
-      // if (hasParent) {
-      //   const parentCode = accessKeyRef.current.list?.find(
-      //     (item) => item.Id === accessKey.ParentId
-      //   )?.Code;
-      //   const isParentChecked =
-      //     accessible.current?.find((item) => item.Code === parentCode)?.Code ||
-      //     checked?.[parentCode]?.Code
-      //       ? true
-      //       : false;
-      //   if (isParentChecked === false) {
-      //     setNewChecked((pre) => ({
-      //       ...pre,
-      //       [parentCode]: {
-      //         ...accessKey
-      //       },
-      //     }));
-      //   }
-      // }
-      if (isPreviousValue) {
-        setRemoveChecked(
-          removeChecked?.filter((item) => item.Code !== accessKey.Code)
-        );
-      } else {
-        setNewChecked((pre) => [
-          ...pre,
-          {
-            ...accessKey,
-          },
-        ]);
-      }
-    }
-  }
-
-  function arrayObjToObj(data) {
-    return data?.reduce((result, obj) => {
-      return { ...result, [obj.Code]: { ...obj } };
-    }, {});
-  }
-
-  function isCheckBoxFunc(code) {
-    if (accessibleObj[code]?.Code && !removeCheckedObj[code]?.Code) {
-      return true;
-    } else if (checkedObj[code]) {
-      return true;
-    }
-    return false;
-  }
-
-  const getChildren = (item) => {
-    try {
-      return item?.map((obj) => {
-        if (obj?.Children?.length <= 0) {
-          return (
-            <Checkbox
-              key={obj.Code}
-              style={{ marginLeft: 25 }}
-              checked={isCheckBoxFunc(obj.Code)}
-              onChange={(e) => checkBoxHandle(obj, e.target.checked)}
-            >
-              {obj.Name}
-            </Checkbox>
-          );
-        }
-        return <Collapse key={obj.Code} items={getItems([obj] ?? [])} />;
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  // Function to parse query parameters
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
   };
 
-  function getItems(items) {
-    try {
-      if (items.length <= 0) {
-        return;
+  const query = useQuery();
+  const paramId = query.get("id"); // Get specific query parameter
+  const paramName = query.get("name"); // Another parameter
+
+  console.log(paramId, paramName);
+
+  const [activeKey, setActiveKey] = useState([""]);
+
+  const [form] = Form.useForm();
+  const [list, setList] = useState([]);
+  const [checked, setChecked] = useState({});
+  const [roleList, setRoleList] = useState([]);
+  async function submitHandle() {
+    const add = [];
+    const remove = [];
+    for (const key in checked) {
+      if (checked[key]) {
+        add.push(key);
+      } else {
+        remove.push(key);
       }
-      return items.map((obj) => {
-        return {
-          key: obj.Code,
-          label: (
-            <Checkbox
-              checked={isCheckBoxFunc(obj.Code)}
-              onChange={(e) => checkBoxHandle(obj, e.target.checked)}
-            >
-              {obj.Name}
-            </Checkbox>
-          ),
-          children:
-            obj?.Children?.length > 0 ? (
-              getChildren(obj?.Children)
-            ) : (
-              <p>{obj.Name}</p>
-            ),
-        };
-      });
-    } catch (error) {
-      console.log(error);
     }
-  }
-
-  async function getList() {
-    const queryUrl = RouteUtil.objectToQueryString({ roleId: Id });
-    // console.log({ queryUrl });
-    const resultAccessible = await RolePermissionService.fetchListRoleAccess(
-      queryUrl
+    const result = await BaseService.post(
+      "http://localhost:8081/api/access-role/create",
+      {
+        roleId: paramId,
+        add,
+        remove,
+      }
     );
-    const result = await RolePermissionService.fetchList("");
-
-    accessible.current = resultAccessible?.list ?? [];
-
-    LocalStorage.setAuthority(resultAccessible?.list?.map((item) => item.Code));
-
-    accessibleObj = arrayObjToObj(accessible.current);
-    accessKeyRef.current = {
-      listGroup: result?.listGroup ?? [],
-      list: result?.list ?? [],
-    };
-    setPanelList(getItems(accessKeyRef.current.listGroup));
   }
 
-  async function submitHandle(value) {
-    const result = await RolePermissionService.update({
-      newChecked,
-      removeChecked,
-      roleId: form.getFieldValue("roleId"),
+  [
+    {
+      id: 1,
+      name: "admin",
+      parentId: null,
+      children: [
+        {
+          id: 2,
+          name: "admin",
+          parentId: 1,
+        },
+      ],
+    },
+  ];
+
+  const setFormatData = (data) => {
+    const parent = data.filter((item) => !item.ParentId);
+
+    const _data = parent.map((item) => {
+      return {
+        ...item,
+        activeKey: [`${item.Id}`],
+        children: data.filter((child) => child.ParentId == item.Id),
+      };
     });
-    if (result?.result) {
-      getList();
-      setRemoveChecked([]);
-      setNewChecked([]);
-    }
-  }
+    setList(_data);
+    // console.log(_data);
+  };
+
+  const fetchData = async () => {
+    const res = await BaseService.get(
+      "http://localhost:8081/api/access-key/get-list?roleId=" + paramId
+    );
+    // console.log(res);
+    setFormatData(res.data);
+    setRoleList(res.roleList);
+    const _checked = {};
+    res.roleList?.map((item) => (_checked[item.AccessKeyId] = true));
+    setChecked(_checked);
+  };
+
   useEffect(() => {
-    getList();
-    if (Name && Id) {
-      form.setFieldValue("roleName", Name);
-      form.setFieldValue("roleId", Id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchData();
+    form.setFieldValue("name", paramName);
   }, []);
-
-  useEffect(() => {
-    setPanelList(getItems(accessKeyRef.current.listGroup) ?? []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newChecked, removeChecked]);
-
-  return { panelList, form, checkBoxHandle, submitHandle, param: { Id, Name } };
+  return {
+    activeKey,
+    setActiveKey,
+    submitHandle,
+    form,
+    list,
+    setList,
+    checked,
+    setChecked,
+    roleList,
+  };
 }
 
 export default useRolePermission;

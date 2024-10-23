@@ -2,7 +2,7 @@
 import { Button, Form, Input, Select, Space } from "antd";
 import React, { useEffect } from "react";
 import RoleService from "./RoleService";
-import  StringUtil from "src/utils";
+import StringUtil from "../../../utils/String";
 
 function AddNew({ setOpenDialog, list, dialog, close }) {
   const layout = {

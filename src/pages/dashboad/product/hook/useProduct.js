@@ -22,6 +22,7 @@ export function useProduct() {
     isEdit: false,
     data: {},
   });
+
   const [uploadProductId, setUploadProductId] = useState(0);
   const pagination = useRef({
     current: 1, //page
@@ -129,6 +130,7 @@ export function useProduct() {
     const res = await BaseService.get(API);
 
     setDataList(res.data);
+
     // fetchCategory();
     pagination.current.totalRecode = res.totalRecord;
   }

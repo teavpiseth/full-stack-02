@@ -1,10 +1,10 @@
-import { BaseService } from "src/services";
+import BaseService from "../../../services/BaseService";
 
 const ApiUrl = {
-  getList: "/role/get-list?",
-  addNew: "/role/create",
-  update: "/role/update",
-  delete: "/role/delete",
+  getList: "http://localhost:8081/api/role/get-list?",
+  addNew: "http://localhost:8081/api/role/create",
+  update: "http://localhost:8081/api/role/update",
+  delete: "http://localhost:8081/api/role/delete",
 };
 
 class RoleService {
@@ -28,6 +28,5 @@ class RoleService {
     return response;
   }
 }
-
 
 export default new RoleService();

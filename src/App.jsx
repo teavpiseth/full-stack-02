@@ -16,6 +16,8 @@ import "./services/AxiosInterceptor.js";
 import Category from "./pages/dashboad/category/index.jsx";
 import Product from "./pages/dashboad/product/index.jsx";
 import AccessKey from "./pages/system/access-key/index.jsx";
+import RolePage from "./pages/system/role/index.jsx";
+import AddRolePermission from "./pages/system/add-role-permission/index.jsx";
 function App() {
   function alertAtAppComponent() {
     alert("Hello from parent component");
@@ -51,6 +53,14 @@ function App() {
               <Route
                 path="/dashboard/access-key"
                 element={<AccessKey></AccessKey>}
+              ></Route>
+              <Route
+                path="/dashboard/role"
+                element={<RolePage></RolePage>}
+              ></Route>
+              <Route
+                path="/dashboard/add-role-permission"
+                element={<AddRolePermission></AddRolePermission>}
               ></Route>
 
               <Route path="/dashboard/*" element={<NotFound />}></Route>

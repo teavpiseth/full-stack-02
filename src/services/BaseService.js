@@ -19,7 +19,7 @@ class BaseService {
       // console.log( response );
       return response?.data;
     } catch (error) {
-      // console.log( error );
+      // console.log(error);
       message.error(error?.response?.data?.errors?.msg || error?.message, [1]);
       return null;
     }

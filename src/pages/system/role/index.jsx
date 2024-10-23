@@ -8,15 +8,18 @@ import {
   Select,
   Space,
   Table,
+  Tag,
   Typography,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import AddNew from "./AddNew";
-import  StringUtil from "src/utils";
+import StringUtil from "../../../utils/String";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function Role() {
+  const navigate = useNavigate();
   const {
-    columns,
     list,
     dialog,
     pageSizeOptions,
@@ -26,7 +29,77 @@ function Role() {
     onChangePageSize,
     setDialog,
     triggerCloseModal,
+    editHandle,
+    deleteHandle,
   } = useRole();
+
+  const columns = [
+    {
+      title: "No",
+      dataIndex: "Id",
+      render: (text, record, index) => {
+        return pagination.pageSize * (pagination.current - 1) + (index + 1);
+      },
+    },
+    {
+      title: "Name",
+      dataIndex: "Name",
+    },
+    {
+      title: "Code",
+      dataIndex: "Code",
+    },
+    {
+      title: "Status",
+      dataIndex: "Status",
+      render: (text) => {
+        return (
+          <Tag color={`${text ? "cyan" : "red"}`}>
+            {StringUtil.getNameStatus(text)}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "CreateAt",
+      dataIndex: "CreateAt",
+      render: (date) => {
+        return moment(date).format("DD-MM-YYYY");
+      },
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Space>
+          <Button
+            type="primary"
+            size="medium"
+            onClick={() => {
+              navigate(
+                `/dashboard/add-role-permission?id=${record.Id}&name=${record.Name}`
+              );
+            }}
+          >
+            Add Permission
+          </Button>
+          <Button
+            onClick={() => editHandle({ text, record })}
+            type="primary"
+            icon={<EditOutlined />}
+            size="medium"
+          ></Button>
+          <Button
+            onClick={() => deleteHandle(record)}
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+            size="medium"
+          ></Button>
+        </Space>
+      ),
+    },
+  ];
 
   const { Search } = Input;
   return (
@@ -72,12 +145,12 @@ function Role() {
         }}
         onChange={onChangeTable}
       />
-      <Select
+      {/* <Select
         defaultValue={5}
         style={{ position: "relative", top: -45 }}
         onChange={onChangePageSize}
         options={pageSizeOptions}
-      />
+      /> */}
       {dialog.open && (
         <Modal
           open={dialog.open}

@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import AddNew from "./AddNew";
-import  StringUtil  from "../../../utils/String";
+import StringUtil from "../../../utils/String";
 import moment from "moment";
 
 function AccessKey() {
@@ -113,42 +113,7 @@ function AccessKey() {
         </Button>
       </Space>
       <Divider style={{ margin: "15px 0" }} />
-      <Space style={{ marginBottom: "15px" }}>
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          Filter
-        </Typography.Title>
-        <Select
-          style={{ width: "120px" }}
-          placeholder="status"
-          onChange={(value) => {
-            filterHandle({ Status: value?.toString() });
-          }}
-          allowClear
-        >
-          <Select.Option value={1}>{StringUtil.getNameStatus(1)}</Select.Option>
-          <Select.Option value={0}>{StringUtil.getNameStatus(0)}</Select.Option>
-        </Select>
-        <Select
-          style={{ width: "120px" }}
-          placeholder="Children"
-          onChange={(value) => {
-            filterHandle({ ParentId: value });
-          }}
-          optionFilterProp="key"
-          allowClear
-        >
-          {listAll?.map((accessKey) => {
-            if (idHasChild?.[accessKey?.Id]) {
-              return (
-                <Select.Option key={accessKey.Name} value={accessKey.Id}>
-                  {accessKey.Name}
-                </Select.Option>
-              );
-            }
-            return null;
-          })}
-        </Select>
-      </Space>
+
       <Table
         columns={columns}
         dataSource={list}
