@@ -5,7 +5,7 @@ import {
   getImageViewServer,
   Status,
 } from "../../../utils/constant";
-import { useProduct } from "./hook/useProduct";
+import useProduct from "./hook/useProduct";
 import AddProduct from "./components/AddProduct";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import useDebounce from "../../../utils/useDebounce";

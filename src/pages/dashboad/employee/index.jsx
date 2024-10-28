@@ -9,6 +9,7 @@ import { useEmployee } from "./hook/useEmployee";
 import AddEmployee from "./components/AddEmployee";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import useDebounce from "../../../utils/useDebounce";
+import { Authority } from "../../../utils/Authority";
 
 const Employee = () => {
   const {
@@ -56,13 +57,15 @@ const Employee = () => {
           placeholder="Search Name"
           style={{ width: "200px" }}
         />
-        <Button
-          type="primary"
-          style={{ marginBottom: "10px" }}
-          onClick={() => setIsOpenModal(true)}
-        >
-          Add Employee
-        </Button>
+        {Authority.check(Authority.employee_add_new) && (
+          <Button
+            type="primary"
+            style={{ marginBottom: "10px" }}
+            onClick={() => setIsOpenModal(true)}
+          >
+            Add Employee
+          </Button>
+        )}
       </div>
       {isOpenModal && (
         <AddEmployee
@@ -82,17 +85,21 @@ const Employee = () => {
           statusCustom: statusCustom,
           action: (record) => (
             <div>
-              <DeleteOutlined
-                onClick={() => handleDelete(record)}
-                style={{ color: "red" }}
-              />
-              <EditOutlined
-                style={{ color: "blue", marginLeft: "10px" }}
-                onClick={() => {
-                  setEdit({ isEdit: true, data: record });
-                  setIsOpenModal(true);
-                }}
-              />
+              {Authority.check(Authority.employee_delete) && (
+                <DeleteOutlined
+                  onClick={() => handleDelete(record)}
+                  style={{ color: "red" }}
+                />
+              )}
+              {Authority.check(Authority.employee_update) && (
+                <EditOutlined
+                  style={{ color: "blue", marginLeft: "10px" }}
+                  onClick={() => {
+                    setEdit({ isEdit: true, data: record });
+                    setIsOpenModal(true);
+                  }}
+                />
+              )}
             </div>
           ),
         })}

@@ -100,6 +100,7 @@ function useRolePermission() {
     checked,
     setChecked,
     roleList,
+    paramId,
   };
 }
 

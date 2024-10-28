@@ -35,6 +35,7 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
       formData.append("status", values.status);
       formData.append("id", edit.data.Id);
       formData.append("imageOld", edit.data.Image);
+      formData.append("roleId", values.roleId);
       const result = await BaseService.put(
         `http://localhost:8081/api/employee/update`,
         formData,
@@ -56,7 +57,7 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
       formData.append("address", values.address);
       formData.append("status", values.status);
       formData.append("password", values.password);
-      console.log(formData);
+      formData.append("roleId", values.roleId);
       const result = await BaseService.post(
         "http://localhost:8081/api/employee/create",
         formData,
@@ -70,6 +71,15 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
     }
   };
 
+  const [roleList, setRoleList] = useState([]);
+
+  const fetchRole = async () => {
+    const res = await BaseService.get(
+      "http://localhost:8081/api/role/get-list"
+    );
+    setRoleList(res.data);
+  };
+
   useEffect(() => {
     if (edit.isEdit) {
       form.setFieldValue("gender", edit.data.Gender);
@@ -81,7 +91,10 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
       form.setFieldValue("firstName", edit.data.FirstName);
       form.setFieldValue("lastName", edit.data.LastName);
       form.setFieldValue("image", edit.data.Image);
+      form.setFieldValue("roleId", edit.data.RoleId);
     }
+
+    fetchRole();
   }, [edit, form]);
 
   const [previewImage, setPreviewImage] = useState("");
@@ -203,6 +216,28 @@ const AddEmployee = ({ isOpen, setIsOpen, fetchData, edit }) => {
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            style={{ display: "block" }}
+            layout="horizontal"
+            label="Role"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            name="roleId"
+          >
+            <Select
+              allowClear
+              options={
+                roleList?.map((item) => ({
+                  value: item.Id,
+                  label: item.Name,
+                })) || []
+              }
+              placeholder="select it"
+            />
           </Form.Item>
 
           <Form.Item

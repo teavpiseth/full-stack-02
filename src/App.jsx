@@ -18,6 +18,8 @@ import Product from "./pages/dashboad/product/index.jsx";
 import AccessKey from "./pages/system/access-key/index.jsx";
 import RolePage from "./pages/system/role/index.jsx";
 import AddRolePermission from "./pages/system/add-role-permission/index.jsx";
+import PrivateRoute from "./components/PrivateRoute/index.jsx";
+import { Authority } from "./utils/Authority.js";
 function App() {
   function alertAtAppComponent() {
     alert("Hello from parent component");
@@ -36,7 +38,12 @@ function App() {
               <Route path="/dashboard" element={<p>Home</p>}></Route>
               <Route
                 path="/dashboard/employee"
-                element={<Employee></Employee>}
+                element={
+                  <PrivateRoute
+                    component={Employee}
+                    authorityKey={Authority.Employee}
+                  ></PrivateRoute>
+                }
               ></Route>
               <Route
                 path="/dashboard/customer"
@@ -44,15 +51,30 @@ function App() {
               ></Route>
               <Route
                 path="/dashboard/category"
-                element={<Category></Category>}
+                element={
+                  <PrivateRoute
+                    component={Category}
+                    authorityKey={Authority.Category}
+                  ></PrivateRoute>
+                }
               ></Route>
               <Route
                 path="/dashboard/product-list"
-                element={<Product></Product>}
+                element={
+                  <PrivateRoute
+                    component={Product}
+                    authorityKey={Authority.Product}
+                  ></PrivateRoute>
+                }
               ></Route>
               <Route
                 path="/dashboard/access-key"
-                element={<AccessKey></AccessKey>}
+                element={
+                  <PrivateRoute
+                    component={AccessKey}
+                    authorityKey={Authority.access_key}
+                  ></PrivateRoute>
+                }
               ></Route>
               <Route
                 path="/dashboard/role"

@@ -21,7 +21,6 @@ const useAccessKey = () => {
     editId: 0,
   });
 
-
   function onChangeTable(table) {
     setPagination({ ...pagination, current: table.current });
   }
@@ -40,10 +39,7 @@ const useAccessKey = () => {
     const Id = record.Id;
     Modal.confirm({
       title: "Delete!",
-      content: (
-       "Are you sure you want to delete?"
-    
-      ),
+      content: "Are you sure you want to delete?",
       onOk() {
         promiseDelete(Id);
       },
@@ -51,13 +47,15 @@ const useAccessKey = () => {
   }
 
   async function getList() {
-    const queryUrl = "";
-    const response = await AccessKeyService.fetchList(queryUrl);
+    // const queryUrl = "";
+    const response = await AccessKeyService.fetchList(
+      "search=" + (filter.current.search ? filter.current.search : "")
+    );
     if (response?.data) {
       setList(
         response.data.map((tableRow, index) => ({ ...tableRow, key: index }))
       );
-      // setListAll(response.listAll);
+      setListAll(response.listAllForSelectParent);
     }
   }
 
@@ -81,6 +79,7 @@ const useAccessKey = () => {
 
   function filterHandle(value) {
     filter.current = { ...filter.current, ...value };
+    console.log(filter.current);
     debounce(() => getList());
   }
 
@@ -108,7 +107,6 @@ const useAccessKey = () => {
   }, []);
 
   return {
-
     list,
     listAll,
     idHasChild,
@@ -120,8 +118,8 @@ const useAccessKey = () => {
     onChangeTable,
     onChangePageSize,
     triggerCloseModal,
-    editHandle, 
-    deleteHandle
+    editHandle,
+    deleteHandle,
   };
 };
 

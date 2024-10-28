@@ -31,6 +31,7 @@ export default function AddRolePermission() {
     checked,
     roleList,
     setChecked,
+    paramId,
   } = useRolePermission();
 
   function getChildren(data) {
@@ -57,6 +58,9 @@ export default function AddRolePermission() {
 
   console.log(checked, "checked");
 
+  if (!paramId) {
+    return <div>Not found</div>;
+  }
   return (
     <>
       <Layout>

@@ -15,6 +15,7 @@ class AuthService {
       // LocalStorage.setUserInfo({ ...res, user: res.data.data });
       LocalStorage.setAccessToken(res.data.accessToken);
       LocalStorage.setRefreshToken(res.data.refreshToken);
+      LocalStorage.setRole(res.data.role);
     }
   }
 }

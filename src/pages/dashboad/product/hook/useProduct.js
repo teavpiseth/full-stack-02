@@ -11,7 +11,7 @@ import BaseService from "../../../../services/BaseService";
 import { DeleteOutlined } from "@ant-design/icons";
 import Category from "../../category";
 
-export function useProduct() {
+function useProduct() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModelUpload, setIsOpenModelUpload] = useState(false);
   const [dataCategory, setDataCategory] = useState([]);
@@ -184,3 +184,5 @@ export function useProduct() {
     setUploadProductId,
   };
 }
+
+export default useProduct;

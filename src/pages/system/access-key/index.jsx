@@ -140,7 +140,7 @@ function AccessKey() {
             close={triggerCloseModal}
             setOpenDialog={setDialog}
             dialog={dialog}
-            list={list}
+            list={listAll}
           />
         </Modal>
       )}

@@ -24,11 +24,11 @@ function getItem(label, key, icon, children) {
 const items = [
   getItem("Employee", "/dashboard/employee", <PieChartOutlined />),
   getItem("Customer", "/dashboard/customer", <DesktopOutlined />),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "3"),
-    getItem("Bill", "4"),
-    getItem("Alex", "5"),
-  ]),
+  // getItem("User", "sub1", <UserOutlined />, [
+  //   getItem("Tom", "3"),
+  //   getItem("Bill", "4"),
+  //   getItem("Alex", "5"),
+  // ]),
   getItem("Product", "product", <TeamOutlined />, [
     getItem("category", "/dashboard/category"),
     getItem("product-list", "/dashboard/product-list"),
@@ -38,7 +38,6 @@ const items = [
     getItem("Role", "/dashboard/role"),
     getItem("Add Role Permission", "/dashboard/add-role-permission"),
   ]),
-  getItem("Files", "/dashboard/Files", <FileOutlined />),
   getItem("Logout", "/dashboard/login", <LogoutOutlined />),
 ];
 const MasterLayoutDashboard = () => {
